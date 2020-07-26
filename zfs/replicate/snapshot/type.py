@@ -1,19 +1,21 @@
 # -*- coding: utf-8 -*-
 """ZFS Snapshot Type."""
-from typing import Any, NamedTuple, Optional
+from dataclasses import dataclass
+from typing import Optional
 
 from ..filesystem import FileSystem
 
 
-class Snapshot(NamedTuple):
+@dataclass
+class Snapshot:
     """ZFS Snapshot Type."""
 
     filesystem: FileSystem
     name: str
-    previous: Optional[Any]  # mypy doesn't support nested types yet
+    previous: Optional["Snapshot"]
     timestamp: int
 
-    def __eq__(self, other: Any) -> bool:
+    def __eq__(self, other: object) -> bool:
         """Equality of Snapshots."""
         if not isinstance(other, Snapshot):
             raise NotImplementedError
