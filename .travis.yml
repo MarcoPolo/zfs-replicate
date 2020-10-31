@@ -1,7 +1,6 @@
 ---
 language: python
 python:
-    - '3.6'  # EOL 2021-12-23
     - '3.7'  # EOL 2023-06-27
     - '3.8'  # EOL 2024-10
     - 3.9-dev   # EOL 2025-10
