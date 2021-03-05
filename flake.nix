@@ -54,6 +54,12 @@
                 type = types.path;
               };
 
+              execStartPre = mkOption {
+                description = "Command to run as ExecStartPre";
+                example = "\${pkgs.openssh}/bin/ssh host nixos-rebuild switch";
+                type = types.str;
+              };
+
               localFilesystem = mkOption {
                 description = "Local ZFS fileystem from which snapshots should be sent.  Defaults to the attribute name.";
                 example = "pool/file/path";
@@ -98,6 +104,7 @@
                 "https://github.com/alunduil/zfs-replicate"
               ];
               restartIfChanged = false;
+              serviceConfig.ExecStartPre = toString cfg.execStartPre;
               serviceConfig.ExecStart = "${zfs-replicate-bin}${recursive} -l ${escapeShellArg cfg.username} -i ${escapeShellArg cfg.identityFilePath}${followDelete}${sshPath} ${escapeShellArg cfg.host} ${escapeShellArg cfg.remoteFilesystem} ${escapeShellArg cfg.localFilesystem}";
               wantedBy = [
                 "zfs-snapshot-daily.service"
