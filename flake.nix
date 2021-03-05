@@ -51,19 +51,19 @@
               sshPath = mkOption {
                 description = "Path to SSH executable to use.";
                 example = "\${pkgs.openssh}/bin/ssh";
-                type = types.path;
+                type = types.nullOr types.path;
               };
 
               execStartPre = mkOption {
                 description = "Command to run as ExecStartPre";
                 example = "\${pkgs.openssh}/bin/ssh host nixos-rebuild switch";
-                type = types.str;
+                type = types.nullOr types.str;
               };
 
               timeout = mkOption {
                 description = "Timeout in seconds for the service";
                 example = "180";
-                type = types.int;
+                type = types.nullOr types.int;
               };
 
               localFilesystem = mkOption {
