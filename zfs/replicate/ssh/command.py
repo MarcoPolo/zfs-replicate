@@ -3,9 +3,11 @@
 from .cipher import Cipher
 
 
-def command(cipher: Cipher, user: str, key_file: str, port: int, host: str) -> str:
+def command(ssh_path: str, cipher: Cipher, user: str, key_file: str, port: int, host: str) -> str:
     """Generate ssh commandline invocation."""
     ssh = "/usr/bin/env - ssh"
+    if ssh_path:
+        ssh = ssh_path
 
     options = []
 

@@ -43,6 +43,10 @@ from .click import EnumChoice
     help="Connect to SSH as USER.",
 )
 @click.option(
+    "--ssh-path",
+    help="Specify path to ssh executable. Uses `/usr/bin/env - ssh` by default",
+)
+@click.option(
     "-i",
     "--identity-file",
     type=click.Path(exists=True, dir_okay=False),
@@ -71,6 +75,7 @@ def main(
     recursive: bool,
     port: int,
     user: str,
+    ssh_path: str,
     identity_file: str,
     cipher: Cipher,
     compression: Compression,
@@ -79,7 +84,7 @@ def main(
     local_fs: FileSystem,
 ) -> None:
     """Replicate LOCAL_FS to REMOTE_FS on HOST."""
-    ssh_command = ssh.command(cipher, user, identity_file, port, host)
+    ssh_command = ssh.command(ssh_path, cipher, user, identity_file, port, host)
 
     if verbose:
         click.echo(f"checking filesystem {local_fs.name}")
