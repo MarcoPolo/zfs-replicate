@@ -62,6 +62,14 @@
                 type = types.nullOr types.str;
               };
 
+              execStopPost = mkOption {
+                description = "Command to run as ExecStopPost";
+                example = "\${pkgs.curl}/bin/curl my-observability.com -d 'result=$SERVICE_RESULT'";
+                default = null;
+                type = types.nullOr types.str;
+              };
+
+
               timeout = mkOption {
                 description = "Timeout in seconds for the service";
                 example = 180;
@@ -114,6 +122,7 @@
               ];
               restartIfChanged = false;
               serviceConfig.ExecStartPre = toString cfg.execStartPre;
+              serviceConfig.ExecStopPost = toString cfg.execStopPost;
               serviceConfig.ExecStart = "${zfs-replicate-bin}${recursive} -l ${escapeShellArg cfg.username} -i ${escapeShellArg cfg.identityFilePath}${followDelete}${sshPath} ${escapeShellArg cfg.host} ${escapeShellArg cfg.remoteFilesystem} ${escapeShellArg cfg.localFilesystem}";
               serviceConfig.TimeoutSec = toString cfg.timeout;
               wantedBy = [
