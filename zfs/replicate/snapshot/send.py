@@ -36,6 +36,8 @@ def send(
         if b"failed to create mountpoint" in error:
             return  # Ignore this error.
 
+        if len(error) == 0 and len(output) == 0:
+            return # Ignore this. We get no output and it seems like the send succeeded.
         raise ZFSReplicateError(
             f"failed to create snapshot: '{current.filesystem.name}@{current.name}': {error!r}",
             current,
