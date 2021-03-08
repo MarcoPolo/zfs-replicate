@@ -109,7 +109,11 @@ def main(
     if verbose:
         click.echo(f"checking filesystem {host}/{r_filesystem.name}")
 
-    r_snaps = snapshot.list(r_filesystem, recursive=recursive, ssh_command=ssh_command)
+    try:
+        r_snaps = snapshot.list(r_filesystem, recursive=recursive, ssh_command=ssh_command)
+    except Exception as e:
+        print("Exception in listing snapshots: ", e)
+        r_snaps = []
 
     if verbose:
         click.echo(f"found {len(r_snaps)} snapshots on {r_filesystem.name}")
