@@ -16,10 +16,11 @@ def send(
     ssh_command: str,
     compression: Compression,
     follow_delete: bool,
+    send_raw: bool,
     previous: Optional[Snapshot] = None,
 ) -> None:
     """Send ZFS Snapshot."""
-    send_command = _send(current, previous, follow_delete=follow_delete)
+    send_command = _send(current, previous, follow_delete=follow_delete, send_raw=send_raw)
 
     compress_command, decompress_command = compress.command(compression)
 
@@ -42,11 +43,14 @@ def send(
         )
 
 
-def _send(current: Snapshot, previous: Optional[Snapshot] = None, follow_delete: bool = False) -> str:
-    options = []  # ["-V"]
+def _send(current: Snapshot, previous: Optional[Snapshot] = None, follow_delete: bool = False, send_raw: bool = False) -> str:
+    options = [""]  # ["-V"]
 
     if follow_delete:
         options.append("-p")
+
+    if send_raw:
+        options.append("-w")
 
     if previous is not None:
         options.append(f"-i '{previous.filesystem.name}@{previous.name}'")

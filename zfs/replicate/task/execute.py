@@ -15,6 +15,7 @@ def execute(
     ssh_command: str,
     follow_delete: bool,
     compression: Compression,
+    send_raw: bool,
 ) -> None:
     """Execute all tasks."""
     sorted_tasks = sorted(tasks, key=lambda x: len(x[0].name.split("/")), reverse=True)
@@ -37,6 +38,7 @@ def execute(
                     ssh_command=ssh_command,
                     follow_delete=follow_delete,
                     compression=compression,
+                    send_raw=send_raw,
                 )
 
 
@@ -59,6 +61,7 @@ def _send(
     ssh_command: str,
     follow_delete: bool,
     compression: Compression,
+    send_raw: bool,
 ) -> None:
     for task in tasks:
         snapshot.send(
@@ -68,4 +71,5 @@ def _send(
             compression=compression,
             follow_delete=follow_delete,
             previous=optional.value(task.snapshot).previous,
+            send_raw=send_raw,
         )

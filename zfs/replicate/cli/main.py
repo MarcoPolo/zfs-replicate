@@ -24,6 +24,12 @@ from .click import EnumChoice
     is_flag=True,
     help="Delete snapshots on REMOTE_FS that have been deleted from LOCAL_FS.",
 )
+@click.option(
+    "--send-raw",
+    "-w",
+    is_flag=True,
+    help="For encrypted datasets, send data exactly as it exists on disk. Is the -w flag in zfs send.",
+)
 @click.option("--recursive", is_flag=True, help="Recursively replicate snapshots.")
 @click.option(
     "--port",
@@ -71,6 +77,7 @@ from .click import EnumChoice
 def main(
     verbose: bool,
     dry_run: bool,
+    send_raw: bool,
     follow_delete: bool,
     recursive: bool,
     port: int,
@@ -129,4 +136,5 @@ def main(
             follow_delete=follow_delete,
             compression=compression,
             ssh_command=ssh_command,
+            send_raw=send_raw,
         )

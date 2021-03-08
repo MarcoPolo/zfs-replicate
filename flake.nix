@@ -22,6 +22,7 @@
           cfg = config.services.zfs.autoReplication;
           recursive = optionalString cfg.recursive " --recursive";
           followDelete = optionalString cfg.followDelete " --follow-delete";
+          sendRaw = optionalString cfg.followDelete " --send-raw";
           sshPath = optionalString (cfg.sshPath != null) " --ssh-path ${escapeShellArg cfg.sshPath}";
           zfs-replicate-bin = "${self.defaultPackage.${pkgs.system}}/bin/zfs-replicate";
         in
@@ -33,6 +34,12 @@
               followDelete = mkOption {
                 description = "Remove remote snapshots that don't have a local correspondant.";
                 default = true;
+                type = types.bool;
+              };
+
+              sendRaw = mkOption {
+                description = "For encrypted datasets, send data exactly as it exists on disk. This is the -w flag in zfs send.";
+                default = false;
                 type = types.bool;
               };
 
@@ -68,7 +75,6 @@
                 default = null;
                 type = types.nullOr types.str;
               };
-
 
               timeout = mkOption {
                 description = "Timeout in seconds for the service";
@@ -123,7 +129,7 @@
               restartIfChanged = false;
               serviceConfig.ExecStartPre = toString cfg.execStartPre;
               serviceConfig.ExecStopPost = toString cfg.execStopPost;
-              serviceConfig.ExecStart = "${zfs-replicate-bin}${recursive} -l ${escapeShellArg cfg.username} -i ${escapeShellArg cfg.identityFilePath}${followDelete}${sshPath} ${escapeShellArg cfg.host} ${escapeShellArg cfg.remoteFilesystem} ${escapeShellArg cfg.localFilesystem}";
+              serviceConfig.ExecStart = "${zfs-replicate-bin}${recursive} -l ${escapeShellArg cfg.username} -i ${escapeShellArg cfg.identityFilePath}${followDelete}${sendRaw}${sshPath} ${escapeShellArg cfg.host} ${escapeShellArg cfg.remoteFilesystem} ${escapeShellArg cfg.localFilesystem}";
               serviceConfig.TimeoutSec = toString cfg.timeout;
               wantedBy = [
                 "zfs-snapshot-daily.service"
