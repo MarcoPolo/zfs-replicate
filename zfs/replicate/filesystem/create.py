@@ -19,7 +19,7 @@ def create(filesystem: FileSystem, ssh_command: str) -> None:
 
     filesystems = [x.name for x in list(top_level, ssh_command=ssh_command)]
 
-    for head in inits(filesystem.name.split("/"))[1:]:
+    for head in inits(filesystem.name.split("/"))[1:-1]:
         path = os.path.join(*head)
 
         if path in filesystems:
